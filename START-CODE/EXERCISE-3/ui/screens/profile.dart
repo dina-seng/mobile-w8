@@ -1,59 +1,48 @@
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
+import '../../model/profile_tile_model.dart';
 
 class ProfileApp extends StatelessWidget {
-  const ProfileApp({super.key});
+  const ProfileApp({super.key, required this.profileData});
+
+  final ProfileData profileData;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary.withAlpha(100),
+      backgroundColor: const Color(0xffC5DDF0),
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: const Color(0xff5C9BD1),
         title: const Text(
           'CADT student Profile',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 40),
-            const CircleAvatar(
+            CircleAvatar(
               radius: 60,
-              backgroundImage: AssetImage(
-                  'assets/images/w8/aang.png'), 
+              backgroundImage: AssetImage(profileData.avatarUrl),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Text(
-              'Ronan OGOR',
-              style: TextStyle(
+              profileData.name,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: Color(0xff5C9BD1),
               ),
             ),
-            const Text(
-              'Flutter Developer',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+            Text(
+              profileData.position,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 20),
-            const ProfileTile(
-              icon: Icons.phone,
-              title: "Phone Number",
-              data: "+123 456 7890",
-            ),
-             const ProfileTile(
-              icon: Icons.location_on,
-              title: "Address",
-              data: "Cambodia",
-            ),
+            const SizedBox(height: 24),
+            for (final tile in profileData.tiles)
+              ProfileTile(icon: tile.icon, title: tile.title, data: tile.value),
           ],
         ),
       ),
@@ -75,15 +64,13 @@ class ProfileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: ListTile(
-          leading: Icon(icon, color: AppColors.primary),
-          title: Text(title),
-          subtitle: Text(data),
-        ),
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        leading: Icon(icon, color: const Color(0xff5C9BD1)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+        subtitle: Text(data),
       ),
     );
   }
