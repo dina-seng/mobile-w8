@@ -1,16 +1,38 @@
 import 'package:flutter/material.dart';
 
-class TemperatureScreen extends StatelessWidget {
-  TemperatureScreen({super.key});
+class TemperatureScreen extends StatefulWidget {
+  const TemperatureScreen({super.key});
+
+  @override
+  State<TemperatureScreen> createState() => _TemperatureScreenState();
+}
+
+class _TemperatureScreenState extends State<TemperatureScreen> {
+  double _fahrenheit = 0;
 
   final InputDecoration inputDecoration = InputDecoration(
     enabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(color: Colors.white, width: 1.0),
       borderRadius: BorderRadius.circular(12),
     ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.white, width: 2.0),
+      borderRadius: BorderRadius.circular(12),
+    ),
     hintText: 'Enter a temperature',
     hintStyle: const TextStyle(color: Colors.white),
   );
+
+  void _convertTemperature(String value) {
+    setState(() {
+      final double? celsius = double.tryParse(value);
+      if (celsius != null) {
+        _fahrenheit = (celsius * 9 / 5) + 32;
+      } else {
+        _fahrenheit = 0;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +58,10 @@ class TemperatureScreen extends StatelessWidget {
             const Text("Temperature in Degrees:"),
             const SizedBox(height: 10),
             TextField(
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              onChanged: _convertTemperature,
               decoration: inputDecoration,
               style: const TextStyle(color: Colors.white),
             ),
@@ -48,7 +74,9 @@ class TemperatureScreen extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text('test'),
+              child: Text(
+                _fahrenheit.toStringAsFixed(2).replaceAll(RegExp(r'\.00$'), ''),
+              ),
             ),
           ],
         ),
